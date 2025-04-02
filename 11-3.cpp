@@ -2,8 +2,10 @@
 #include <iostream>
 #include <type_traits>
 
-template <typename Target, typename T> struct mpcs::Getter2<Target, T> {
-  static auto &get(Tuple2<T> &tup) {
+template <typename Target, typename... Ts> struct Getter3;
+
+template <typename Target, typename T> struct Getter3<Target, T> {
+  static auto &get(mpcs::Tuple2<T> &tup) {
     if (std::is_same_v<T, Target>) {
       return tup.val;
     }
@@ -12,8 +14,8 @@ template <typename Target, typename T> struct mpcs::Getter2<Target, T> {
 };
 
 template <typename Target, typename T, typename... Ts>
-struct Getter2<Target, T, Ts...> {
-  static auto &get(Tuple2<T, Ts...> &tup) {
+struct Getter3<Target, T, Ts...> {
+  static auto &get(mpcs::Tuple2<T, Ts...> &tup) {
     Tuple2<Ts...> const &restOfVals = tup;
     auto idx = Getter2<Target, Ts...>::get(restOfVals);
   }
