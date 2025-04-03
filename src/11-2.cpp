@@ -2,6 +2,7 @@
 #include "Tuple.h"
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <type_traits>
 
 template <typename... Ts>
@@ -44,4 +45,6 @@ int main() {
   // template specialization not being allowed.
   auto t = type_at<1, Tuple>();
   static_assert(std::is_same_v<decltype(t)::type, double>);
+
+  std::cout << "Successfully compiled -- static assertions passed\n";
 }
