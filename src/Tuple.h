@@ -1,9 +1,6 @@
 #ifndef TUPLE_H
 #define TUPLE_H
-#include "variadic_examples.h"
-#include <tuple>
-#include <type_traits>
-#include <utility>
+
 namespace mpcs {
 // First try at tuple
 template <typename... Ts> struct Tuple1;
