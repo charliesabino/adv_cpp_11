@@ -1,4 +1,5 @@
 #include "Tuple.h"
+#include "variadic_examples.h"
 #include <cstddef>
 #include <format>
 #include <iostream>
@@ -13,30 +14,19 @@ struct TypeGetterHelper<Target, mpcs::Tuple2<T, Ts...>> {
   }
 };
 
-template <typename Target> struct TypeGetterHelper<Target, mpcs::Tuple2<>> {
-  constexpr static Target get(mpcs::Tuple2<> &_) {
-    throw std::runtime_error("No matches");
-  }
-};
-
 template <typename Target, typename... Ts>
 struct TypeGetterHelper<Target, mpcs::Tuple2<Target, Ts...>> {
   constexpr static Target get(mpcs::Tuple2<Target, Ts...> &tup) {
-    mpcs::Tuple2<Ts...> &restOfVals = tup;
-    try {
-      TypeGetterHelper<Target, mpcs::Tuple2<Ts...>>::get(restOfVals);
-      throw std::runtime_error("Duplicate matches");
-    } catch (const std::runtime_error &e) {
-      if (std::string(e.what()) != "No matches") {
-        throw;
-      }
-    }
     return tup.val;
   }
 };
 
 template <typename Target, typename... Ts>
 constexpr Target get(mpcs::Tuple2<Ts...> &tup) {
+  static_assert(!(mpcs::Count<Target, mpcs::Tuple2<Ts...>>::value == 0),
+                "No matches found\n");
+  static_assert(mpcs::Count<Target, mpcs::Tuple2<Ts...>>::value == 1,
+                "Duplicate matches found\n");
   return TypeGetterHelper<Target, mpcs::Tuple2<Ts...>>::get(tup);
 }
 
@@ -46,11 +36,8 @@ int main() {
   auto i = get<int>(t);
   auto d = get<double>(t);
 
-  try {
-    auto _ = get<float>(t);
-  } catch (const std::runtime_error &e) {
-    std::cout << e.what() << '\n';
-  }
+  // uncommenting the line below will result in compilation failure
+  // auto f = get<float>(t);
 
-  std::cout << std::format("Int: {}, Double: {}", i, d);
+  std::cout << std::format("Int: {}, Double: {}\n", i, d);
 }
