@@ -76,9 +76,9 @@ template <int i, typename T, typename... Ts> struct Getter2<i, T, Ts...> {
   }
 };
 
-template <int i, typename... Ts> auto &get(Tuple2<Ts...> &tup) {
-  return Getter2<i, Ts...>::get(tup);
-}
+// template <int i, typename... Ts> auto &get(Tuple2<Ts...> &tup) {
+//   return Getter2<i, Ts...>::get(tup);
+// }
 
 } // namespace mpcs
 
